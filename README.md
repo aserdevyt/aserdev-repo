@@ -6,7 +6,7 @@ my pacman repo cuz AUR is cringe 💀
 ## 🚀 Install  
 
 ### step 1: use [Chaotic AUR](https://aur.chaotic.cx/docs)  
-They got everything, tbh.  
+They got everything good for deps, tbh. 
 
 ```sh
 # add signing key
