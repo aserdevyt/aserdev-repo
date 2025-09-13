@@ -42,3 +42,8 @@ done
 echo "==> Updating repo database"
 repo-add -n -R "$REPO_NAME.db.tar.gz" *.pkg.tar.zst
 
+# Create pacman-friendly symlinks
+ln -sf "$REPO_NAME.db.tar.gz" "$REPO_NAME.db"
+ln -sf "$REPO_NAME.files.tar.gz" "$REPO_NAME.files"
+
+
