@@ -3,7 +3,7 @@ my pacman repo cuss aur is cringe
 
 ## install
 
-### please use [https://aur.chaotic.cx/docs](chaoatic aur)
+### please use [choatic aur](aur.chaotic.cx/docs)
 
 ```
 # install the keys
