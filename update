@@ -1,19 +1,18 @@
 #!/bin/bash
-
+set -euo pipefail
 
 REPO_NAME="aserdev"
 ARCH_DIR="$(pwd)/x86_64"
 
 # ----------------------------
-# Start fresh
+# 1. Nuke old repo files
 # ----------------------------
 echo "==> Cleaning old repo files..."
-rm -f "$ARCH_DIR"/*.pkg.tar.* "$ARCH_DIR/$REPO_NAME".{db*,files*} || true
-
-mkdir -p "$ARCH_DIR"
+rm -f "$ARCH_DIR"/*.pkg.tar.* 2>/dev/null || true
+rm -f "$ARCH_DIR/$REPO_NAME".db* "$ARCH_DIR/$REPO_NAME".files* 2>/dev/null || true
 
 # ----------------------------
-# Build packages
+# 2. Build packages
 # ----------------------------
 echo "==> Building packages..."
 find . -type f -name PKGBUILD | while read -r pkgbuild; do
@@ -21,52 +20,51 @@ find . -type f -name PKGBUILD | while read -r pkgbuild; do
     echo "--> Building in $dir"
     (
         cd "$dir"
-        rm -rf src/ pkg/ *.pkg.tar.* || true
+        rm -rf src pkg *.pkg.tar.* 2>/dev/null || true
         makepkg -sf --noconfirm --skipchecksums --skippgpcheck
-        mv *.pkg.tar.zst "$ARCH_DIR"/
+        mv ./*.pkg.tar.zst "$ARCH_DIR"/
     )
 done
 
-# ----------------------------
-# Prune old versions
-# ----------------------------
 cd "$ARCH_DIR"
 
+# ----------------------------
+# 3. Prune old versions
+# ----------------------------
 echo "==> Pruning old versions..."
+shopt -s nullglob
 for pkg in *.pkg.tar.zst; do
     base="${pkg%-*-*-*}" # strip version+arch
     latest=$(ls "$base"-*.pkg.tar.zst | sort -V | tail -n1)
-    for old in "$base"-*.pkg.tar.zst; do
-        if [[ "$old" != "$latest" ]]; then
-            echo "Removing old: $old"
-            rm -f "$old"
-        fi
+    for old in $base-*.pkg.tar.zst; do
+        [ "$old" = "$latest" ] && continue
+        echo "Removing old: $old"
+        rm -f "$old"
     done
 done
+shopt -u nullglob
 
 # ----------------------------
-# Rebuild database
+# 4. Rebuild database
 # ----------------------------
 echo "==> Rebuilding database..."
-rm -f "$REPO_NAME".db* "$REPO_NAME".files* || true
-repo-add "$REPO_NAME.db.tar.zst" *.pkg.tar.zst
+if ls *.pkg.tar.zst >/dev/null 2>&1; then
+    repo-add "$REPO_NAME.db.tar.zst" ./*.pkg.tar.zst
+    echo "==> Making plain copies (GitHub-safe)..."
+	rm -rf "$REPO_NAME.db" "$REPO_NAME.files"
+    cp -f "$REPO_NAME.db.tar.zst"     "$REPO_NAME.db"
+    cp -f "$REPO_NAME.files.tar.zst" "$REPO_NAME.files"
+else
+    echo "==> No packages found, skipping repo-add..."
+fi
 
 # ----------------------------
-# Make GitHub-safe copies
-# ----------------------------
-echo "==> Making plain copies (GitHub-safe)..."
-rm -f "$REPO_NAME.db" "$REPO_NAME.files"
-cp "$REPO_NAME.db.tar.zst"     "$REPO_NAME.db"
-cp "$REPO_NAME.files.tar.zst" "$REPO_NAME.files"
-
-# ----------------------------
-# Cleanup PKGBUILD dirs
+# 5. Clean PKGBUILD dirs (only src/ and pkg/)
 # ----------------------------
 echo "==> Cleaning PKGBUILD directories..."
-cd ..
-find ./PKGBUILD -type d | while read -r dir; do
-    echo "--> Cleaning $dir"
-    find "$dir" -mindepth 1 -not -name PKGBUILD -exec rm -rf {} +
+find ./PKGBUILD -type d \( -name 'src' -o -name 'pkg' \) -print 2>/dev/null | while read -r d; do
+    echo "--> Removing $d"
+    rm -rf "$d"
 done
 
 echo "==> Done ✅"
