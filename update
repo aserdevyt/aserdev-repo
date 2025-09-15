@@ -1,23 +1,35 @@
 #!/bin/bash
-set -euo pipefail
+
 
 REPO_NAME="aserdev"
 ARCH_DIR="$(pwd)/x86_64"
 
+# ----------------------------
+# Start fresh
+# ----------------------------
+echo "==> Cleaning old repo files..."
+rm -f "$ARCH_DIR"/*.pkg.tar.* "$ARCH_DIR/$REPO_NAME".{db*,files*} || true
+
 mkdir -p "$ARCH_DIR"
 
+# ----------------------------
+# Build packages
+# ----------------------------
 echo "==> Building packages..."
 find . -type f -name PKGBUILD | while read -r pkgbuild; do
     dir="$(dirname "$pkgbuild")"
     echo "--> Building in $dir"
     (
         cd "$dir"
-        rm -f *.pkg.tar.* src/ pkg/ || true
+        rm -rf src/ pkg/ *.pkg.tar.* || true
         makepkg -sf --noconfirm --skipchecksums --skippgpcheck
         mv *.pkg.tar.zst "$ARCH_DIR"/
     )
 done
 
+# ----------------------------
+# Prune old versions
+# ----------------------------
 cd "$ARCH_DIR"
 
 echo "==> Pruning old versions..."
@@ -32,15 +44,30 @@ for pkg in *.pkg.tar.zst; do
     done
 done
 
+# ----------------------------
+# Rebuild database
+# ----------------------------
 echo "==> Rebuilding database..."
 rm -f "$REPO_NAME".db* "$REPO_NAME".files* || true
 repo-add "$REPO_NAME.db.tar.zst" *.pkg.tar.zst
 
+# ----------------------------
+# Make GitHub-safe copies
+# ----------------------------
 echo "==> Making plain copies (GitHub-safe)..."
-cp -f "$REPO_NAME.db.tar.zst"     "$REPO_NAME.db"
-cp -f "$REPO_NAME.files.tar.zst" "$REPO_NAME.files"
+rm -f "$REPO_NAME.db" "$REPO_NAME.files"
+cp "$REPO_NAME.db.tar.zst"     "$REPO_NAME.db"
+cp "$REPO_NAME.files.tar.zst" "$REPO_NAME.files"
+
+# ----------------------------
+# Cleanup PKGBUILD dirs
+# ----------------------------
+echo "==> Cleaning PKGBUILD directories..."
+cd ..
+find ./PKGBUILD -type d | while read -r dir; do
+    echo "--> Cleaning $dir"
+    find "$dir" -mindepth 1 -not -name PKGBUILD -exec rm -rf {} +
+done
 
 echo "==> Done ✅"
-echo "==> Checksums for verification:"
-sha256sum "$REPO_NAME".db* "$REPO_NAME".files* *.pkg.tar.zst
 
