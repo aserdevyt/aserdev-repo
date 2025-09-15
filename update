@@ -36,10 +36,11 @@ echo "==> Rebuilding database..."
 rm -f "$REPO_NAME".db* "$REPO_NAME".files* || true
 repo-add "$REPO_NAME.db.tar.zst" *.pkg.tar.zst
 
-echo "==> Fixing pacman symlink compatibility..."
-# Make sure pacman sees both tar.zst and plain names
-ln -sf "$REPO_NAME.db.tar.zst"     "$REPO_NAME.db"
-ln -sf "$REPO_NAME.files.tar.zst" "$REPO_NAME.files"
+echo "==> Making plain copies (GitHub-safe)..."
+cp -f "$REPO_NAME.db.tar.zst"     "$REPO_NAME.db"
+cp -f "$REPO_NAME.files.tar.zst" "$REPO_NAME.files"
 
 echo "==> Done ✅"
+echo "==> Checksums for verification:"
+sha256sum "$REPO_NAME".db* "$REPO_NAME".files* *.pkg.tar.zst
 
