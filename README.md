@@ -28,4 +28,4 @@ I’ll host it here, signed & ready.
 ---
 
 ## 📦 Why?  
-Because the AUR is cool but sometimes it’s a mess. This repo = less cringe, more chill.  
+Because the AUR is cool but sometimes it’s a mess. This repo is managed by the community not some trusted users 💀 
