@@ -11,6 +11,11 @@ my pacman repo cuz AUR is cringe 💀
 ```sh
 bash <(curl -fsSL https://raw.githubusercontent.com/aserdevyt/aserdev-repo/refs/heads/main/install.sh)
 ```
+## 💀 uninstall
+
+```sh
+bash <(curl -fsSL https://raw.githubusercontent.com/aserdevyt/aserdev-repo/refs/heads/main/uninstall.sh)
+```
 
 ---
 
