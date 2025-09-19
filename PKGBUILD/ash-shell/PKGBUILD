@@ -24,21 +24,18 @@ pkgver() {
   git log -1 --format="%cd" --date=format:'%Y%m%d.%H%M%S'
 }
 
-
-#pkgver() {
-#  cd "$srcdir/ash-shell"
-#  local _ver
-#  _ver="$(git describe --tags --long 2>/dev/null || echo 0.0.0-0-g$(git rev-parse --short HEAD))"
-#  printf "%s" "${_ver//-/.}"
-#}
-
 build() {
   cd "$srcdir/ash-shell"
-  cmake -B build -S .
-  cmake --build build
+  # Clean build folder to avoid debug leftovers
+  rm -rf build-release
+  # Configure Release build only
+  cmake -B build-release -S . -DCMAKE_BUILD_TYPE=Release
+  cmake --build build-release --config Release
 }
 
 package() {
-  cd "$srcdir/ash-shell/build"
+  cd "$srcdir/ash-shell/build-release"
+  # Install only the Release binary
   install -Dm755 ash "$pkgdir/usr/bin/ash"
 }
+
