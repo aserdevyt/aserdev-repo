@@ -1,0 +1,16 @@
+# Maintainer: aserdev 
+pkgname=ascii-enc
+pkgver=1.0
+pkgrel=1
+pkgdesc="Text to ASCII encoder script made by Szerwigi1410"
+arch=('any')
+url="https://github.com/Szerwigi1410/Text-to-ascii-encoder"
+license=('MIT')  # Adjust if needed
+depends=('python')
+source=("https://raw.githubusercontent.com/Szerwigi1410/Text-to-ascii-encoder/refs/heads/main/ascii-enc.py")
+sha256sums=('SKIP')  # Skip for raw GitHub, or calculate actual hash
+
+package() {
+    install -Dm755 "$srcdir/ascii-enc.py" "$pkgdir/usr/bin/ascii-enc"
+}
+
