@@ -1,6 +1,6 @@
 # Maintainer: Oliwier <szerwigi14@gmail.com>
 pkgname=cpuinfo
-pkgver=2025.09.14.r427247b
+pkgver=2025.09.21.rc488314
 pkgrel=1
 pkgdesc="cpuinfo is a simple tool to check your cpu specs mady be szerwigi14"
 arch=('any')

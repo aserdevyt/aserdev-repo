@@ -1,13 +1,13 @@
 # Maintainer: Oliwier <szerwigi14@gmail.com>
 pkgname=brokefetch
-pkgver=2025.09.14.r29a3178
+pkgver=2025.09.21.rcee117e
 pkgrel=1
-pkgdesc="A broken neofetch clone script 💀 (mod version with logos)"
+pkgdesc="A broken neofetch clone script (mod version with logos)"
 arch=('any')
 url="https://github.com/Szerwigi1410/brokefetch"
 license=('MIT')
 depends=('bash' 'git')
-source=("$pkgname::git+$url")
+source=("$pkgname::git+$url#branch=main#depth=1")
 sha256sums=('SKIP')
 
 pkgver() {
@@ -18,43 +18,8 @@ pkgver() {
     echo "${date}.r${hash}"
 }
 
-prepare() {
-    echo "🧹 Preparing mod script..."
-    cp "$srcdir/$pkgname/brokefetch_mod.sh" "$srcdir/"
-}
-
 package() {
-    echo "📦 Installing mod script..."
-    install -Dm755 "$srcdir/brokefetch_mod.sh" "$pkgdir/usr/bin/brokefetch"
-
-    echo "🖼️ Installing logos folder from repo..."
+    install -Dm755 "$srcdir/$pkgname/brokefetch_mod.sh" "$pkgdir/usr/bin/brokefetch"
     install -d "$pkgdir/usr/share/brokefetch/logos/logos/"
     cp -r "$srcdir/$pkgname/logos/"* "$pkgdir/usr/share/brokefetch/logos/logos/"
-}
-
-clean() {
-    echo "💣 Nuking old build artifacts..."
-    rm -f "$PWD"/*.pkg.tar.* "$PWD"/*.log
-}
-
-post_install() {
-    echo "♻️ Cleaning old system binary (if any)..."
-    if [[ -f /usr/bin/brokefetch ]]; then
-        rm -f /usr/bin/brokefetch
-    fi
-}
-
-post_upgrade() {
-    echo "🔄 Updating... removing outdated mod script..."
-    if [[ -f /usr/bin/brokefetch ]]; then
-        rm -f /usr/bin/brokefetch
-    fi
-}
-
-post_remove() {
-    echo "🗑️ Removing brokefetch-mod leftovers..."
-    if [[ -f /usr/bin/brokefetch ]]; then
-        rm -f /usr/bin/brokefetch
-    fi
-    rm -rf /usr/share/brokefetch/logos/
 }
