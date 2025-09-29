@@ -1,13 +1,14 @@
 # Maintainer: Oliwier <szerwigi14@gmail.com>
 pkgname=brokefetch
-pkgver=2025.09.21.rcee117e
+pkgver=2025.09.27.r07565f6
 pkgrel=1
 pkgdesc="A broken neofetch clone script (mod version with logos)"
 arch=('any')
 url="https://github.com/Szerwigi1410/brokefetch"
 license=('MIT')
 depends=('bash' 'git')
-source=("$pkgname::git+$url#branch=main#depth=1")
+source=("git+$url#branch=main")
+
 sha256sums=('SKIP')
 
 pkgver() {
