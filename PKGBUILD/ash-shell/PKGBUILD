@@ -1,41 +1,26 @@
 # Maintainer: aserdevyt <aserdevyt@outlook.com>
 pkgname=ash-shell
-pkgver=20251024.175933
+pkgver=$(date +%Y%m%d.%H%M%S)
 pkgrel=1
 pkgdesc="A modern, secure, feature-rich Linux shell written in C"
 arch=('x86_64')
 url="https://github.com/aserdevyt/ash-shell"
 license=('GPL3')
 depends=('readline')
-makedepends=('git' 'cmake' 'make' 'gcc')
 optdepends=('kitty: proper Unicode/font rendering inside the shell')
-
 conflicts=('ash-shell-debug')
 provides=('ash-shell')
 replaces=('ash-shell-debug')
 
-source=("git+https://github.com/aserdevyt/ash-shell.git")
+source=("https://raw.githubusercontent.com/aserdevyt/ash-shell/main/ash")
 md5sums=('SKIP')
 
-# 🚫 prevent makepkg from auto-creating -debug package
 options=(!debug)
 
-pkgver() {
-  cd "$srcdir/ash-shell"
-  git fetch --unshallow --tags --force >/dev/null 2>&1 || true
-  git gc --prune=all --aggressive >/dev/null 2>&1 || true
-  git log -1 --format="%cd" --date=format:'%Y%m%d.%H%M%S'
-}
-
 build() {
-  cd "$srcdir/ash-shell"
-  rm -rf build-release
-  cmake -B build-release -S . -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr
-  cmake --build build-release --config Release
+  echo "✅ Using prebuilt binary — no build step required."
 }
 
 package() {
-  cd "$srcdir/ash-shell/build-release"
-  install -Dm755 ash "$pkgdir/usr/bin/ash"
+  install -Dm755 "$srcdir/ash" "$pkgdir/usr/bin/ash"
 }
-
