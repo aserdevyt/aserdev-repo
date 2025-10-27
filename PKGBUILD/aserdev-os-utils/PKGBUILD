@@ -1,32 +1,13 @@
 # Maintainer: aserdev <you@example.com>
 
 pkgname=aserdev-os-utils
-pkgver=$(date +%Y%m%d.%H%M)
+pkgver=20251027.2302
 pkgrel=1
-pkgdesc="aserdev OS utilities and scripts"
+pkgdesc="aserdev OS core utilities (rofi-cliphist, screenrec, aser-settings)"
 arch=('any')
 url="https://github.com/aserdevyt/aserdev-os-utils"
 license=('custom')
-depends=(
-  'rofi'
-  'bash'
-  'wf-recorder'
-  'yay'
-  'flatpak'
-  'thunar'
-  'kitty'
-  'wl-clipboard'
-  'cliphist'
-  'nvim'
-  'pluma'
-  'rofi-emoji'
-  'brokefetch'
-  'btop'
-  'htop'
-  'fastfetch'
-  'grimblast-git'
-  'wlogout'
-)
+depends=()
 makedepends=('git')
 source=("git+$url")
 md5sums=('SKIP')
@@ -38,13 +19,13 @@ pkgver() {
 package() {
   cd "$srcdir/$pkgname"
 
-  # copy everything except LICENSE, README, and .git stuff
-  find . -type f \
-    ! -path '*/.git/*' \
-    ! -name 'LICENSE' \
-    ! -name 'README.md' \
-    -exec install -Dm755 "{}" "$pkgdir/bin/{}" \;
-
-  chmod -R 755 "$pkgdir/bin"
+  # only take these files
+  for f in rofi-cliphist screenrec aser-settings; do
+    if [[ -f "$f" ]]; then
+      install -Dm755 "$f" "$pkgdir/usr/bin/$f"
+    else
+      echo "⚠️  Warning: $f not found in repo!" >&2
+    fi
+  done
 }
 
