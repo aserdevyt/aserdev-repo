@@ -1,0 +1,22 @@
+# Maintainer: aserdev <you@example.com>
+
+pkgname=aserdev-os-skel
+pkgver=20251027.2227            # placeholder, made irrelevant by pkgver() below
+pkgrel=1
+pkgdesc="Default /etc/skel setup for aserdev OS"
+arch=('any')
+url="https://github.com/aserdevyt/aserdev-dotfiles"
+license=('custom')
+depends=('xz' 'tar')
+source=("https://github.com/aserdevyt/aserdev-dotfiles/raw/refs/heads/main/skel.tar.gz")
+md5sums=('SKIP')
+
+pkgver() {
+    date +%Y%m%d.%H%M
+}
+
+package() {
+    mkdir -p "$pkgdir/etc/skel"
+    tar -xvf "$srcdir/skel.tar.gz" -C "$pkgdir/etc/skel"
+}
+

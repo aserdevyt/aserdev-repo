@@ -1,0 +1,50 @@
+# Maintainer: aserdev <you@example.com>
+
+pkgname=aserdev-os-utils
+pkgver=$(date +%Y%m%d.%H%M)
+pkgrel=1
+pkgdesc="aserdev OS utilities and scripts"
+arch=('any')
+url="https://github.com/aserdevyt/aserdev-os-utils"
+license=('custom')
+depends=(
+  'rofi'
+  'bash'
+  'wf-recorder'
+  'yay'
+  'flatpak'
+  'thunar'
+  'kitty'
+  'wl-clipboard'
+  'cliphist'
+  'nvim'
+  'pluma'
+  'rofi-emoji'
+  'brokefetch'
+  'btop'
+  'htop'
+  'fastfetch'
+  'grimblast-git'
+  'wlogout'
+)
+makedepends=('git')
+source=("git+$url")
+md5sums=('SKIP')
+
+pkgver() {
+  date +%Y%m%d.%H%M
+}
+
+package() {
+  cd "$srcdir/$pkgname"
+
+  # copy everything except LICENSE, README, and .git stuff
+  find . -type f \
+    ! -path '*/.git/*' \
+    ! -name 'LICENSE' \
+    ! -name 'README.md' \
+    -exec install -Dm755 "{}" "$pkgdir/bin/{}" \;
+
+  chmod -R 755 "$pkgdir/bin"
+}
+
