@@ -1,6 +1,6 @@
 # Maintainer: Oliwier <szerwigi14@gmail.com>
 pkgname=brokefetch
-pkgver=2025.10.23.r84d2914
+pkgver=2025.10.30.ra9ff026
 pkgrel=1
 pkgdesc="A broken neofetch clone script (mod version with logos)"
 arch=('any')
