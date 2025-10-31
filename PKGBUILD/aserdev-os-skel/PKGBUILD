@@ -7,8 +7,8 @@ pkgdesc="Default /etc/skel setup for aserdev OS"
 arch=('any')
 url="https://github.com/aserdevyt/aserdev-dotfiles"
 license=('custom')
-depends=('xz' 'tar')
-source=("https://github.com/aserdevyt/aserdev-dotfiles/raw/refs/heads/main/skel.tar.xz")
+depends=('unzip')
+source=("https://github.com/aserdevyt/aserdev-dotfiles/raw/refs/heads/main/skel.zip")
 md5sums=('SKIP')
 
 pkgver() {
@@ -17,6 +17,5 @@ pkgver() {
 
 package() {
     mkdir -p "$pkgdir/etc/skel"
-    tar -xvf "$srcdir/skel.tar.xz" -C "$pkgdir/etc/skel"
+    unzip -o "$srcdir/skel.zip" -d "$pkgdir/etc/skel"
 }
-
