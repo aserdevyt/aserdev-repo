@@ -1,9 +1,9 @@
 # Maintainer: aserdev <you@example.com>
 
 pkgname=aserdev-os-utils
-pkgver=20251107.1747
+pkgver=20251107.1923
 pkgrel=1
-pkgdesc="aserdev OS core utilities (rofi-cliphist, screenrec, aser-settings)"
+pkgdesc="aserdev OS core utilities (rofi-cliphist, screenrec, aser-settings, userctl)"
 arch=('any')
 url="https://github.com/aserdevyt/aserdev-os-utils"
 license=('custom')
@@ -13,19 +13,20 @@ source=("git+$url")
 md5sums=('SKIP')
 
 pkgver() {
+  # Generates the current version based on YearMonthDay.HourMinute
   date +%Y%m%d.%H%M
 }
 
 package() {
   cd "$srcdir/$pkgname"
 
-  # only take these files
-  for f in rofi-cliphist screenrec aser-settings; do
+  # List of utilities to install
+  for f in rofi-cliphist screenrec aser-settings userctl; do
     if [[ -f "$f" ]]; then
+      # Install the file with executable permissions into /usr/bin
       install -Dm755 "$f" "$pkgdir/usr/bin/$f"
     else
-      echo "⚠️  Warning: $f not found in repo!" >&2
+      echo "⚠️  Warning: $f not found in repo! Skipping installation for this file." >&2
     fi
   done
 }
-

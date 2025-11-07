@@ -8,13 +8,71 @@ TMP_BASE="${HOME}/tmp/pkgs"
 # 0. Ensure directories exist
 mkdir -p "$TMP_BASE/packages" "$TMP_BASE/sources" "$TMP_BASE/build"
 
+# Function to check and inject build paths into /etc/makepkg.conf
+check_and_inject_config() {
+    echo "==> Checking if custom build directories are configured in /etc/makepkg.conf..."
+
+    local config_lines=""
+    local needed=false
+    # Define the absolute paths to inject
+    local PKG_PATH="${HOME}/tmp/pkgs/packages"
+    local SRC_PATH="${HOME}/tmp/pkgs/sources"
+    local BUILD_PATH="${HOME}/tmp/pkgs/build"
+
+    # Use grep -P to check for the variable only if it's NOT commented out (#)
+    if ! grep -qP "^[[:space:]]*(?!#)PKGDEST=" /etc/makepkg.conf; then
+      config_lines+=$'\nPKGDEST='"\"$PKG_PATH\""
+      needed=true
+    fi
+    if ! grep -qP "^[[:space:]]*(?!#)SRCDEST=" /etc/makepkg.conf; then
+      config_lines+=$'\nSRCDEST='"\"$SRC_PATH\""
+      needed=true
+    fi
+    if ! grep -qP "^[[:space:]]*(?!#)BUILDDIR=" /etc/makepkg.conf; then
+      config_lines+=$'\nBUILDDIR='"\"$BUILD_PATH\""
+      needed=true
+    fi
+
+    if $needed; then
+      echo -e "\nATTENTION: The following build paths are missing from /etc/makepkg.conf."
+      echo -e "Injecting these paths ensures makepkg uses your temporary build locations by default."
+      echo -e "--- Configuration to inject (requires sudo) ---"
+      echo "$config_lines"
+      echo "-------------------------------------------------"
+      
+      read -r -p "Do you want to proceed and inject these lines? (y/N): " response
+      
+      case "$response" in
+        [yY][eE][sS]|[yY])
+          if command -v sudo &>/dev/null; then
+              # Append the configuration lines to the file
+              echo "$config_lines" | sudo tee -a /etc/makepkg.conf > /dev/null
+              echo "Successfully updated /etc/makepkg.conf."
+          else
+              echo "Error: 'sudo' command not found. Cannot update /etc/makepkg.conf. Aborting." >&2
+              exit 1
+          fi
+          ;;
+        *)
+          echo "Injection skipped. The script will proceed using command-line overrides for makepkg."
+          ;;
+      esac
+    else
+      echo "All custom build directories are already configured globally."
+    fi
+}
+
 # 1. Nuke old repo files
 echo "==> Cleaning old repo files..."
 rm -f "$ARCH_DIR"/*.pkg.tar.* 2>/dev/null || true
 rm -f "$ARCH_DIR/$REPO_NAME".db* "$ARCH_DIR/$REPO_NAME".files* 2>/dev/null || true
 
+# 1.5. Check and inject config
+check_and_inject_config
+
 # 2. Build packages
 echo "==> Building packages..."
+# Find all PKGBUILD files recursively, excluding the directory itself if named PKGBUILD
 find . -type f -name PKGBUILD | while read -r pkgbuild; do
     dir="$(dirname "$pkgbuild")"
     echo "--> Building in $dir"
@@ -25,6 +83,8 @@ find . -type f -name PKGBUILD | while read -r pkgbuild; do
         rm -rf src pkg *.pkg.tar.* 2>/dev/null || true
 
         # Run makepkg with custom dirs
+        # NOTE: Explicitly providing these here acts as a robust override, ensuring the script
+        # works even if the user cancels the /etc/makepkg.conf injection.
         makepkg -sf --noconfirm --skipchecksums --skippgpcheck \
                 PKGDEST="$TMP_BASE/packages" \
                 SRCDEST="$TMP_BASE/sources" \
@@ -32,7 +92,8 @@ find . -type f -name PKGBUILD | while read -r pkgbuild; do
                 -c
 
         # Move built package(s) to your repo directory
-        mv "$TMP_BASE/packages"/*.pkg.tar.* "$ARCH_DIR"/
+        # The makepkg command above might output multiple packages if the PKGBUILD is split
+        mv "$TMP_BASE/packages"/*.pkg.tar.* "$ARCH_DIR"/ 2>/dev/null || true
     )
 done
 
@@ -42,8 +103,14 @@ cd "$ARCH_DIR"
 echo "==> Pruning old versions..."
 shopt -s nullglob
 for pkg in *.pkg.tar.*; do
+    # This regex attempts to find the package name prefix before the version tag
+    # e.g., 'package-version-arch.pkg.tar.zst' -> 'package'
+    # This pruning logic is essential for maintaining a clean repo directory.
     base="${pkg%-*-*-*}" 
-    latest=$(ls "$base"-*.pkg.tar.* | sort -V | tail -n1)
+    
+    # Find the latest package for this base name by sorting versions
+    latest=$(ls -1v "$base"-*.pkg.tar.* 2>/dev/null | tail -n1)
+    
     for old in $base-*.pkg.tar.*; do
         [ "$old" = "$latest" ] && continue
         echo "Removing old: $old"
@@ -54,21 +121,29 @@ shopt -u nullglob
 
 # 4. Rebuild database
 echo "==> Rebuilding database..."
+# Check if there are any packages left to add
 if ls *.pkg.tar.* >/dev/null 2>&1; then
+    # Use repo-add to create or update the database
     repo-add "$REPO_NAME.db.tar.zst" ./*.pkg.tar.*
-    echo "==> Making plain copies (GitHub‑safe)…"
+    echo "==> Making plain copies (GitHub-safe)..."
+    # Remove old plain copies
     rm -rf "$REPO_NAME.db" "$REPO_NAME.files"
+    # Create plain, uncompressed copies for servers that don't handle .tar.zst well (e.g., GitHub Pages)
     cp -f "$REPO_NAME.db.tar.zst"     "$REPO_NAME.db"
     cp -f "$REPO_NAME.files.tar.zst" "$REPO_NAME.files"
 else
-    echo "==> No packages found, skipping repo‑add…"
+    echo "==> No packages found, skipping repo-add..."
 fi
 
 # 5. Clean PKGBUILD dirs (only src/ and pkg/)
-echo "==> Cleaning PKGBUILD directories…"
-find ./PKGBUILD -type d \( -name 'src' -o -name 'pkg' \) -print 2>/dev/null | while read -r d; do
-    echo "--> Removing $d"
-    rm -rf "$d"
+echo "==> Cleaning PKGBUILD directories..."
+# Clean up temporary build directories in the source folders
+find . -maxdepth 2 -type d \( -name 'src' -o -name 'pkg' \) -print 2>/dev/null | while read -r d; do
+    # Ensure it's not the repository root directory before removing
+    if [[ "$d" != "./src" && "$d" != "./pkg" ]]; then
+      echo "--> Removing $d"
+      rm -rf "$d"
+    fi
 done
 
 echo "==> Done ✅"
