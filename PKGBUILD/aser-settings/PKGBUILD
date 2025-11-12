@@ -1,6 +1,6 @@
 # Maintainer: AserDev <noreply@aserdev.dev>
 pkgname=aser-settings
-pkgver=2.0.0
+pkgver=20251112.1446
 pkgrel=1
 pkgdesc="AserDev Settings - GTK4 settings app (prebuilt binary from GitHub releases)"
 arch=('x86_64')
