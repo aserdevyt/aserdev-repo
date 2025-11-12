@@ -6,6 +6,7 @@ pkgdesc="AserDev Settings - GTK4 settings app (prebuilt binary from GitHub relea
 arch=('x86_64')
 url="https://github.com/aserdevyt/aserdev-settings"
 license=('custom')
+options=('!debug')
 
 
 pkgver() {
@@ -24,10 +25,7 @@ source=(
 # We cannot reliably checksum remote files in this simple example; SKIP them.
 sha256sums=('SKIP' 'SKIP')
 
-build() {
-  # no build step: we download a prebuilt binary
-  return 0
-}
+
 
 package() {
   # Ensure the prebuilt binary is fetched via curl (binary is stored in the
@@ -40,6 +38,9 @@ package() {
 
   install -d "$pkgdir/usr/bin"
   install -m755 "$srcdir/aser-settings" "$pkgdir/usr/bin/aser-settings"
+  
+  # Strip debug symbols to prevent .debug package creation
+  strip --strip-all "$pkgdir/usr/bin/aser-settings"
 
   install -d "$pkgdir/usr/share/applications"
   install -m644 "$srcdir/aser-settings.desktop" "$pkgdir/usr/share/applications/aser-settings.desktop"
