@@ -1,7 +1,7 @@
 # Maintainer: aserdev <you@example.com>
 
 pkgname=aserdev-os-utils
-pkgver=20251113.1945
+pkgver=20251113.2126
 pkgrel=1
 pkgdesc="aserdev OS core utilities (rofi-cliphist, screenrec, aser-settings, userctl)"
 arch=('any')
