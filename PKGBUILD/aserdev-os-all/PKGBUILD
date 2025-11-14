@@ -26,7 +26,7 @@ depends=(
   'dracula-gtk-theme' 'colloid-icon-theme' 'noto-fonts-emoji' 'ttf-iosevka-nerd'
   'pavucontrol' 'vlc' 'vlc-plugins-all' 'fzf' 'bat' 'polkit-gnome' 'visual-studio-code-bin'
   'qbittorrent' 'figlet' 'rsync' 'jdk-openjdk' 'inotify-tools' 'wf-recorder'
-  'aserdev-os-utils' 'aserdev-os-skel' 'dialog' 'archiso' 'aser-settings' 'usbutils'
+  'aserdev-os-utils' 'aserdev-os-skel' 'dialog' 'archiso' 'aser-settings' 'usbutils' 'pacman-contrib'
 )
 makedepends=()
 optdepends=()
@@ -34,6 +34,10 @@ provides=('aserdev-os-all')
 conflicts=()
 source=()
 sha256sums=()
+
+pkgver() {
+    date +%Y%m%d.%H%M
+}
 
 package() {
   echo "aserdev-os-all meta package — nothing to install here, just vibes 💅"
