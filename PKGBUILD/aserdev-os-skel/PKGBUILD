@@ -1,7 +1,7 @@
 # Maintainer: aserdev <you@example.com>
 
 pkgname=aserdev-os-skel
-pkgver=20251115.0104            # placeholder, made irrelevant by pkgver() below
+pkgver=20251115.0108            # placeholder, made irrelevant by pkgver() below
 pkgrel=1
 pkgdesc="Default /etc/skel setup for aserdev OS"
 arch=('any')
