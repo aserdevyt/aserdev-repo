@@ -1,6 +1,6 @@
 # Maintainer: aserdev <you@example.com>
 pkgname=aserdev-os-all
-pkgver=20251028
+pkgver=20251115.0128
 pkgrel=1
 pkgdesc="The full aserdev OS experience — all utilities, configs, and swag 😎"
 arch=('any')
