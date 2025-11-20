@@ -21,7 +21,7 @@ package() {
   cd "$srcdir/$pkgname"
 
   # List of utilities to install
-  for f in rofi-cliphist screenrec aser-menu userctl aser-power ls-updates update ins help; do
+  for f in rofi-cliphist screenrec aser-menu userctl aser-power ls-updates update ins help services; do
     if [[ -f "$f" ]]; then
       # Install the file with executable permissions into /usr/bin
       install -Dm755 "$f" "$pkgdir/usr/bin/$f"
