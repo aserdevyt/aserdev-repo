@@ -1,6 +1,6 @@
 # Maintainer: aserdev 
 pkgname=ascii-enc
-pkgver=1.0
+pkgver=$(date +%s)
 pkgrel=1
 pkgdesc="Text to ASCII encoder script made by Szerwigi1410"
 arch=('any')

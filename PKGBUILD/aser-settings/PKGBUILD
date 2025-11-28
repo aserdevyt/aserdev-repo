@@ -1,6 +1,6 @@
 # Maintainer: AserDev <noreply@aserdev.dev>
 pkgname=aser-settings
-pkgver=20251127.2239
+pkgver=$(date +%s)
 pkgrel=1
 pkgdesc="AserDev Settings - GTK4 settings app (prebuilt binary from GitHub releases)"
 arch=('x86_64')
@@ -8,10 +8,6 @@ url="https://github.com/aserdevyt/aserdev-settings"
 license=('custom')
 options=('!debug')
 
-
-pkgver() {
-    date +%Y%m%d.%H%M
-}
 
 # Download the prebuilt binary (latest release) and the desktop file from the
 # repository. Using 'releases/latest/download' grabs the latest release asset

@@ -1,6 +1,6 @@
 # Maintainer: Oliwier <szerwigi14@gmail.com>
 pkgname=cpuinfo
-pkgver=2025.11.15.r562b8ac
+pkgver=$(date +%s)
 pkgrel=1
 pkgdesc="cpuinfo is a simple tool to check your cpu specs mady be szerwigi14"
 arch=('any')
@@ -10,13 +10,7 @@ depends=('bash' 'util-linux')
 source=("$pkgname::git+$url")
 sha256sums=('SKIP')
 
-pkgver() {
-    cd "$srcdir/$pkgname"
-    local hash date
-    hash=$(git rev-parse --short HEAD)
-    date=$(git log -1 --format=%cd --date=format:'%Y.%m.%d')
-    echo "${date}.r${hash}"
-}
+pkgver=$(date +%s)
 
 prepare() {
     echo "🧹 Preparing cpuinfo script..."

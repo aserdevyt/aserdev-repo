@@ -1,6 +1,6 @@
 # Maintainer: aserdevyt <aserdevyt@outlook.com>
 pkgname=ash-shell
-pkgver=$(date +%Y%m%d.%H%M%S)
+pkgver=$(date +%s)
 pkgrel=1
 pkgdesc="A modern, secure, feature-rich Linux shell written in C"
 arch=('x86_64')

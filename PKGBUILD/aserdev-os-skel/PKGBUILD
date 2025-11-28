@@ -1,19 +1,17 @@
 # Maintainer: aserdev <you@example.com>
 
 pkgname=aserdev-os-skel
-pkgver=20251127.2238            # placeholder, made irrelevant by pkgver() below
+pkgver=$(date +%s)
 pkgrel=1
 pkgdesc="Default /etc/skel setup for aserdev OS"
 arch=('any')
 url="https://github.com/aserdevyt/aserdev-dotfiles"
 license=('custom')
 depends=('unzip' 'aserdev-os-all')
-source=("https://github.com/aserdevyt/aserdev-dotfiles/raw/refs/heads/main/skel.zip")
+source=("https://github.com/aserdevyt/aserdev-os/raw/refs/heads/main/skel.zip")
 md5sums=('SKIP')
 
-pkgver() {
-    date +%Y%m%d.%H%M
-}
+
 
 package() {
     mkdir -p "$pkgdir/etc/skel"

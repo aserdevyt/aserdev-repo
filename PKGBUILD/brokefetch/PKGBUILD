@@ -1,6 +1,6 @@
 # Maintainer: Oliwier <szerwigi14@gmail.com>
 pkgname=brokefetch
-pkgver=2025.11.09.rbaef28b
+pkgver=$(date +%s)
 pkgrel=1
 pkgdesc="A broken neofetch clone script (mod version with logos)"
 arch=('any')
@@ -10,14 +10,6 @@ depends=('bash' 'git')
 source=("git+$url#branch=main")
 
 sha256sums=('SKIP')
-
-pkgver() {
-    cd "$srcdir/$pkgname"
-    local hash date
-    hash=$(git rev-parse --short HEAD)
-    date=$(git log -1 --format=%cd --date=format:'%Y.%m.%d')
-    echo "${date}.r${hash}"
-}
 
 package() {
     install -Dm755 "$srcdir/$pkgname/brokefetch_mod.sh" "$pkgdir/usr/bin/brokefetch"
