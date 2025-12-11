@@ -2,7 +2,7 @@
 pkgname=aserdev-os-all
 pkgver=$(date +%s)
 pkgrel=1
-pkgdesc="The full aserdev OS experience — all utilities, configs, and swag 😎"
+pkgdesc="aserdev-os meta pkg (hyprland)"
 arch=('any')
 url="https://github.com/aserdev"
 license=('GPL')
@@ -26,17 +26,16 @@ PKGS=(
   dracula-gtk-theme colloid-icon-theme noto-fonts-emoji ttf-iosevka-nerd
   pavucontrol vlc vlc-plugins-all fzf bat polkit-gnome visual-studio-code-bin
   qbittorrent figlet rsync jdk-openjdk inotify-tools wf-recorder
-  aserdev-os-utils aserdev-os-skel dialog archiso aser-settings usbutils pacman-contrib direnv gimp kdenlive flatpak
+  aserdev-os-utils aserdev-os-skel-hyprland dialog archiso aser-settings usbutils pacman-contrib direnv gimp kdenlive flatpak
 )
 depends=("${PKGS[@]}")
 makedepends=()
 optdepends=()
-provides=('aserdev-os-all')
 conflicts=()
 source=()
 sha256sums=()
 
 package() {
-  echo "aserdev-os-all meta package — nothing to install here, just vibes 💅"
+  echo "aserdev-os-hyprland meta package — nothing to install here, just vibes 💅"
 }
 

@@ -157,6 +157,28 @@ else
 fi
 
 # ----------------------------
+# Apply pacman.conf from aserdev-os
+# ----------------------------
+print_status "Downloading pacman.conf from aserdev-os..."
+PACMAN_CONF_URL="https://raw.githubusercontent.com/aserdevyt/aserdev-os/main/pacman.conf"
+
+if curl --fail --silent "$PACMAN_CONF_URL" -o /tmp/pacman.conf.new; then
+    if sudo mv /tmp/pacman.conf.new "$PACMAN_CONF"; then
+        print_success "pacman.conf updated successfully"
+        if ! sudo pacman -Sy; then
+            print_error "Failed to sync package databases after updating pacman.conf"
+            exit 1
+        fi
+    else
+        print_error "Failed to apply new pacman.conf"
+        exit 1
+    fi
+else
+    print_error "Failed to download pacman.conf from $PACMAN_CONF_URL"
+    exit 1
+fi
+
+# ----------------------------
 # Finished
 # ----------------------------
 print_success "All done 🎉"
@@ -164,9 +186,3 @@ if grep -q "^\[$REPO_NAME\]" "$PACMAN_CONF"; then
     echo "Example: sudo pacman -S brokefetch"
     echo "Use '$0 -R' to remove $REPO_NAME repository"
 fi
-
-# ----------------------------
-# Finished
-# ----------------------------
-print_success "All done 🎉"
-echo "Example: sudo pacman -S brokefetch"

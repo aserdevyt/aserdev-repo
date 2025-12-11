@@ -1,0 +1,19 @@
+# Maintainer: aserdev <you@example.com>
+
+pkgname=aserdev-os-skel-lite
+pkgver=$(date +%s)
+pkgrel=1
+pkgdesc="Default /etc/skel setup for aserdev-OS(lite)"
+arch=('any')
+url="https://github.com/aserdevyt/aserdev-os"
+license=('custom')
+depends=('unzip' 'aserdev-os-lite')
+source=("https://github.com/aserdevyt/aserdev-os/raw/refs/heads/main/skel-lite.zip")
+md5sums=('SKIP')
+
+
+
+package() {
+    mkdir -p "$pkgdir/etc/skel"
+    unzip -o "$srcdir/skel-lite.zip" -d "$pkgdir/etc/skel"
+}

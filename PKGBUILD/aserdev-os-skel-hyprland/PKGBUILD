@@ -1,0 +1,19 @@
+# Maintainer: aserdev <you@example.com>
+
+pkgname=aserdev-os-skel-hyprland
+pkgver=$(date +%s)
+pkgrel=1
+pkgdesc="Default /etc/skel setup for aserdev-OS(hyprland)"
+arch=('any')
+url="https://github.com/aserdevyt/aserdev-os"
+license=('custom')
+depends=('unzip' 'aserdev-os-hyprland')
+source=("https://github.com/aserdevyt/aserdev-os/raw/refs/heads/main/skel-hyprland.zip")
+md5sums=('SKIP')
+
+
+
+package() {
+    mkdir -p "$pkgdir/etc/skel"
+    unzip -o "$srcdir/skel-hyprland.zip" -d "$pkgdir/etc/skel"
+}
