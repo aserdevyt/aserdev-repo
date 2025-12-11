@@ -16,10 +16,10 @@ PKGS=(
   nm-connection-editor libnm networkmanager-openvpn networkmanager-pptp
   networkmanager-vpnc networkmanager-openconnect networkmanager-l2tp
   networkmanager-strongswan bat yay ttf-jetbrains-mono-nerd
-  fcitx5 fcitx5-configtool fcitx5-mozc fastfetch
+   fastfetch
   noto-fonts-emoji ttf-iosevka-nerd fzf bat
   figlet rsync jdk-openjdk inotify-tools
-  aserdev-os-utils aserdev-os-skel-lite dialog archiso usbutils pacman-contrib direnv
+  aserdev-os-utils dialog archiso usbutils pacman-contrib direnv
 )
 depends=("${PKGS[@]}")
 makedepends=()
@@ -32,3 +32,4 @@ package() {
   echo "aserdev-os-lite meta package — nothing to install here, just vibes 💅"
 }
 
+#  aserdev-os-skel-lite

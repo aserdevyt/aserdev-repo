@@ -7,7 +7,7 @@ pkgdesc="Default /etc/skel setup for aserdev-OS(lite)"
 arch=('any')
 url="https://github.com/aserdevyt/aserdev-os"
 license=('custom')
-depends=('unzip' 'aserdev-os-lite')
+depends=('unzip')
 source=("https://github.com/aserdevyt/aserdev-os/raw/refs/heads/main/skel-lite.zip")
 md5sums=('SKIP')
 
