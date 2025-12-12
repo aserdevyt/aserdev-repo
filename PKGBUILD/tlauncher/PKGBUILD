@@ -14,12 +14,13 @@ package() {
     cp "$srcdir/tlauncher-aserdev-os/TLauncher.jar" "$pkgdir/usr/share/tlauncher/TLauncher.jar"
     cp "$srcdir/tlauncher-aserdev-os/tlauncher.png" "$pkgdir/usr/share/tlauncher/tlauncher.png"
 
-    chmod 777 "$pkgdir/usr/share/tlauncher"
-
     mkdir -p "$pkgdir/usr/bin"
-    install -Dm755 "$srcdir/tlauncher-aserdev-os/tlauncher" "$pkgdir/usr/bin/tlauncher"
+    cp "$srcdir/tlauncher-aserdev-os/tlauncher" "$pkgdir/usr/bin/tlauncher"
 
     mkdir -p "$pkgdir/usr/share/applications"
-    install -Dm644 "$srcdir/tlauncher-aserdev-os/tlauncher.desktop" "$pkgdir/usr/share/applications/tlauncher.desktop"
+    cp "$srcdir/tlauncher-aserdev-os/tlauncher.desktop" "$pkgdir/usr/share/applications/tlauncher.desktop"
+
+    chmod -R 777 "$pkgdir"
 }
+
 
