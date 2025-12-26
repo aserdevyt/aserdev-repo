@@ -1,0 +1,15 @@
+# Maintainer: aserdev <you@example.com>
+pkgname=aserinstall
+pkgver=$(date +%s)
+pkgrel=1
+pkgdesc="Installer script for aserdev-os"
+arch=('any')
+url="https://github.com/aserdevyt/aserdev-os"
+license=('MIT')
+depends=('bash' 'curl')
+source=("https://raw.githubusercontent.com/aserdevyt/aserdev-os/main/aserinstall")
+sha256sums=('SKIP')  # skip since it's a raw script
+
+package() {
+    install -Dm755 "$srcdir/aserinstall" "$pkgdir/usr/bin/aserinstall"
+}

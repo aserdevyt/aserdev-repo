@@ -1,0 +1,42 @@
+# Maintainer: aserdev <you@example.com>
+pkgname=aserdev-os-hyprland
+pkgver=$(date +%s)
+pkgrel=1
+pkgdesc="aserdev-os meta pkg (hyprland)"
+arch=('any')
+url="https://github.com/aserdev"
+license=('GPL')
+PKGS=(
+  htop btop hyprland hyprpaper grimblast hyprpicker waybar
+  rofi-wayland rofi-emoji swaync waypaper xdg-desktop-portal-hyprland
+  kitty thunar pluma qt5ct qt6ct cmake cpio glaze hyprland-protocols
+  uwsm grimblast-git libnotify hyprpicker wl-clipboard otf-font-awesome
+  xsel xclip gvfs slurp grim zsh imagemagick python-pygments
+  libcanberra catfish gvfs tumbler thunar-volman thunar-archive-plugin
+  thunar-media-tags-plugin ffmpegthumbnailer poppler-glib yt-dlp ffmpeg
+  libgsf nvim vi vim nano less git curl wget aria2
+  microsoft-edge-stable libgepub libopenraw freetype2 plocate zeitgeist
+  python-requests file-roller unzip unrar discord pipewire pipewire-alsa
+  pipewire-jack pipewire-pulse pipewire-v4l2 gst-plugin-pipewire wireplumber
+  pavucontrol pamixer pulsemixer paprefs networkmanager network-manager-applet
+  nm-connection-editor libnm networkmanager-openvpn networkmanager-pptp
+  networkmanager-vpnc networkmanager-openconnect networkmanager-l2tp
+  networkmanager-strongswan cliphist bat yay wlogout ttf-jetbrains-mono-nerd
+  fcitx5 fcitx5-configtool fcitx5-qt fcitx5-gtk fcitx5-mozc fastfetch
+  dracula-gtk-theme colloid-icon-theme noto-fonts-emoji ttf-iosevka-nerd
+  pavucontrol vlc vlc-plugins-all fzf bat polkit-gnome visual-studio-code-bin
+  qbittorrent figlet rsync jdk-openjdk inotify-tools wf-recorder
+  aserdev-os-utils dialog archiso aser-settings usbutils pacman-contrib direnv gimp kdenlive flatpak aserdev-os-skel-hyprland
+)
+depends=("${PKGS[@]}")
+makedepends=()
+optdepends=()
+conflicts=()
+source=()
+sha256sums=()
+
+package() {
+  echo "aserdev-os-hyprland meta package — nothing to install here, just vibes 💅"
+}
+
+#aserdev-os-skel-hyprland

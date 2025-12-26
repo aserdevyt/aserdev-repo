@@ -1,0 +1,18 @@
+# Maintainer: Oliwier <szerwigi14@gmail.com>
+pkgname=brokefetch
+pkgver=$(date +%s)
+pkgrel=1
+pkgdesc="A broken neofetch clone script (mod version with logos)"
+arch=('any')
+url="https://github.com/Szerwigi1410/brokefetch"
+license=('MIT')
+depends=('bash' 'git')
+source=("git+$url#branch=main")
+
+sha256sums=('SKIP')
+
+package() {
+    install -Dm755 "$srcdir/$pkgname/brokefetch_mod.sh" "$pkgdir/usr/bin/brokefetch"
+    install -d "$pkgdir/usr/share/brokefetch/logos/logos/"
+    cp -r "$srcdir/$pkgname/logos/"* "$pkgdir/usr/share/brokefetch/logos/logos/"
+}

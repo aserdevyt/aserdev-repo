@@ -1,0 +1,28 @@
+# Maintainer: aserdev <you@example.com>
+
+pkgname=aserdev-os-utils
+pkgver=$(date +%s)
+pkgrel=1
+pkgdesc="aserdev OS core utilities (rofi-cliphist, screenrec, aser-settings, userctl)"
+arch=('any')
+url="https://github.com/aserdevyt/aserdev-os-utils"
+license=('custom')
+depends=('aserdev-os-all')
+makedepends=('git')
+source=("git+$url")
+md5sums=('SKIP')
+
+
+package() {
+  cd "$srcdir/$pkgname"
+
+  # List of utilities to install
+  for f in rofi-cliphist screenrec aser-menu userctl aser-power ls-updates update ins help services; do
+    if [[ -f "$f" ]]; then
+      # Install the file with executable permissions into /usr/bin
+      install -Dm755 "$f" "$pkgdir/usr/bin/$f"
+    else
+      echo "⚠️  Warning: $f not found in repo! Skipping installation for this file." >&2
+    fi
+  done
+}
