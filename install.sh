@@ -8,7 +8,7 @@ REPO_NAME="aserdev"
 GITHUB_USER="aserdevyt"
 ARCH=$(uname -m)  # usually x86_64
 PACMAN_CONF="/etc/pacman.conf"
-REPO_URL="https://raw.githubusercontent.com/$GITHUB_USER/aserdev-repo/main/$ARCH"
+REPO_URL="https://aserdevyt.github.io/aserdev-repo/x86_64"
 
 # Colors
 RED='\033[0;31m'
